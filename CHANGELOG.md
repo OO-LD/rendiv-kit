@@ -43,3 +43,12 @@ copying.
 - `loadFonts` takes the face list; the kit ships no typeface
 - no palette ships. `src/theme-contract.json` states the required tokens and
   `node/checks/theme.mjs` enforces them
+
+## 0.1.1
+
+### Fixed
+
+- the export map doubled the extension, so `rendiv-kit/node/foo.mjs` resolved
+  to `node/foo.mjs.mjs`. Both spellings now map to the same file
+- `Card` consults the theme only for defaults and no longer requires a
+  provider, so a project can adopt one component without mounting one
