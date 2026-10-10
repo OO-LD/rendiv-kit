@@ -195,3 +195,41 @@ test('stalenessCheck: force overrides everything', () => {
   touch(png, 60_000);
   assert.ok(stalenessCheck({ root, force: true })({ name: 'a' }, png));
 });
+
+// The contract is stated twice: as JSON that checks/theme.mjs reads at runtime,
+// and as TypeScript that a project is compiled against. Types cannot be read at
+// runtime and JSON cannot type a project, so neither can be derived from the
+// other. This holds them level instead.
+test('theme-contract.json and the types in theme.ts agree on required tokens', () => {
+  const here = path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1'));
+  const srcDir = path.resolve(here, '..', 'src');
+  const contract = JSON.parse(fs.readFileSync(path.join(srcDir, 'theme-contract.json'), 'utf-8'));
+  const theme = fs.readFileSync(path.join(srcDir, 'theme.ts'), 'utf-8');
+
+  const block = (name) => {
+    const m = theme.match(new RegExp(`export type ${name} = \\{([\\s\\S]*?)\\n\\}`));
+    assert.ok(m, `theme.ts declares no ${name}`);
+    return [...m[1].matchAll(/^\s{2}(\w+)\??:/gm)].map((x) => x[1]);
+  };
+
+  for (const [section, typeName] of [
+    ['colors', 'RequiredColors'],
+    ['type', 'RequiredType'],
+    ['fonts', 'Fonts'],
+    ['layout', 'Layout'],
+  ]) {
+    const declared = block(typeName);
+    for (const token of contract[section].required) {
+      assert.ok(
+        declared.includes(token),
+        `theme-contract.json requires ${section}.${token}, but ${typeName} does not declare it`,
+      );
+    }
+    for (const token of declared) {
+      assert.ok(
+        contract[section].required.includes(token),
+        `${typeName} declares ${token}, but theme-contract.json does not require it`,
+      );
+    }
+  }
+});

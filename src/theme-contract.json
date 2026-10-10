@@ -1,0 +1,38 @@
+{
+  "$comment": "The tokens the kit components read. A project palette may add any number of its own on top; it may not omit these. Read at runtime by node/checks/theme.mjs and mirrored as types in src/theme.ts, which node/kit.test.mjs holds to this file.",
+  "colors": {
+    "required": ["bg", "ink", "muted", "hairline", "panel", "accent"],
+    "notes": {
+      "bg": "the surface a scene is drawn on",
+      "ink": "body and headline text on bg",
+      "muted": "secondary text, which must still clear contrast on bg and on panel",
+      "hairline": "a drawn edge, the thinnest thing on screen",
+      "panel": "a raised surface: cards, code blocks, quote boxes",
+      "accent": "the one colour the project leads with. Projects had this under teal, oold and accent; the kit standardises the name so a shared component can reach it"
+    }
+  },
+  "type": {
+    "required": ["kicker", "headline", "body"],
+    "optional": ["display", "title", "headlineSm", "lead", "small", "caption", "label", "code", "quote", "mono"],
+    "tier": {
+      "size": "number, px",
+      "weight": "number, optional",
+      "leading": "number, optional, unitless line-height",
+      "tracking": "number, optional, px letter-spacing"
+    }
+  },
+  "fonts": {
+    "required": ["sans", "mono"],
+    "notes": {
+      "sans": "font-family stack the Stage sets for the whole frame",
+      "mono": "font-family stack for code and values"
+    }
+  },
+  "layout": {
+    "required": ["padX", "padY"],
+    "notes": {
+      "padX": "horizontal safe margin, inside which everything is drawn",
+      "padY": "vertical safe margin"
+    }
+  }
+}
