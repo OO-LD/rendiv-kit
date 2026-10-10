@@ -16,7 +16,7 @@ is read from the consuming project's `rendiv.config.json`.
 ## Install
 
 ```bash
-npm i github:simontaurus/rendiv-kit#v0.1.0
+npm i github:simontaurus/rendiv-kit#v0.1.2
 pip install "rendiv-kit @ git+https://github.com/simontaurus/rendiv-kit#subdirectory=python"
 ```
 

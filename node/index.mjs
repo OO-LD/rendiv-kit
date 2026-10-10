@@ -4,7 +4,6 @@ export {
   parseArgs,
   matches,
   still,
-  stills,
   render,
   renderSegmented,
   assertNoBlackFrames,

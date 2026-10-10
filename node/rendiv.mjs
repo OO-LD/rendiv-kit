@@ -57,49 +57,15 @@ export function still({ root, cwd, entry, composition, out, frame, props }) {
   run(root, cwd, ['still', entry, composition, out, '--frame', String(frame), ...propsArg(props)]);
 }
 
-// Renders many frames of one composition in a single process.
+// `stills()` used to live here: one bundle, one browser, many frames through
+// @rendiv/renderer's renderStill. It was removed in 0.1.2 because it is racy.
+// It screenshots without waiting for the frame to settle, so a still can come
+// back carrying a neighbouring beat's picture. Two consecutive runs agree with
+// each other, which is what hid it; runs under different load do not, and one
+// committed still in a real project was wrong this way for months.
 //
-// `still()` shells out per frame, so every beat pays a full Vite bundle and a
-// fresh Chromium launch; the screenshot itself is a small part of that. Here the
-// bundle and the browser are made once and reused, because `renderStill` takes a
-// resolved serveUrl and composition rather than an entry file, and the browser
-// helpers are process-level singletons.
-//
-// This reaches into @rendiv/renderer, which is a peer dependency the consumer
-// may not have installed directly. `fastStills` in fast-stills.mjs does the same
-// job through Playwright and @rendiv/bundler only, and is the faster of the two;
-// this one stays for callers that want the renderer's own code path.
-export async function stills({ root, entry, composition, beats, outDir, props, log = console.log }) {
-  // Resolved against the project's own install, and via file:// because Windows
-  // rejects a bare drive path as an ESM specifier.
-  const from = (pkg) =>
-    pathToFileURL(path.resolve(root, `node_modules/@rendiv/${pkg}/dist/index.js`)).href;
-  const { bundle } = await import(from('bundler'));
-  const renderer = await import(from('renderer'));
-  const { ensureBrowser, closeBrowser, selectComposition, renderStill } = renderer;
-
-  const outAbs = path.resolve(root, outDir);
-  fs.mkdirSync(outAbs, { recursive: true });
-
-  const serveUrl = await bundle({ entryPoint: path.resolve(root, entry) });
-  await ensureBrowser();
-  try {
-    const comp = await selectComposition(serveUrl, composition, props);
-    for (const [name, frame] of beats) {
-      process.stdout.write(`${name} @ ${frame} ... `);
-      await renderStill({
-        serveUrl,
-        composition: comp,
-        output: path.join(outAbs, `${name}.png`),
-        frame,
-        inputProps: props,
-      });
-      log('ok');
-    }
-  } finally {
-    await closeBrowser();
-  }
-}
+// Use `fastStills` from ./fast-stills.mjs. It waits on __RENDIV_PENDING_HOLDS__
+// before every screenshot and its output matches `rendiv still` byte for byte.
 
 export function render({
   root,

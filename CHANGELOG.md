@@ -52,3 +52,15 @@ copying.
   to `node/foo.mjs.mjs`. Both spellings now map to the same file
 - `Card` consults the theme only for defaults and no longer requires a
   provider, so a project can adopt one component without mounting one
+
+## 0.1.2
+
+### Removed
+
+- `stills()`. It screenshotted without waiting for the frame to settle, so a
+  still could come back carrying a neighbouring beat's picture. Two consecutive
+  runs agreed with each other, which is what hid it; runs under different load
+  did not. A committed still in a real project was wrong this way, and the
+  independent `rendiv still` reference confirmed which output was correct.
+  Use `fastStills`, which waits on the pending-hold count and matches the CLI
+  byte for byte.
