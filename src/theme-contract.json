@@ -8,7 +8,7 @@
       "muted": "secondary text, which must still clear contrast on bg and on panel",
       "hairline": "a drawn edge, the thinnest thing on screen",
       "panel": "a raised surface: cards, code blocks, quote boxes",
-      "accent": "the one colour the project leads with. Projects had this under teal, oold and accent; the kit standardises the name so a shared component can reach it"
+      "accent": "the one colour the project leads with. Projects named this differently from each other; the kit standardises the name so a shared component can reach it"
     }
   },
   "type": {
