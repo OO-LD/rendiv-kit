@@ -1,6 +1,6 @@
 {
   "name": "rendiv-kit",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Shared mechanics for rendiv video and deck projects: a fast still pipeline, segmented rendering, slide primitives, layout checks and deck exports.",
   "license": "MIT",
   "repository": {

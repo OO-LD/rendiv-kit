@@ -81,3 +81,11 @@ Eight now use `fastStills`, which cut their still passes by three to four times.
 - a still may name its own `outDir`, so one pass writes every palette of a cut.
   The palette is an input prop, not a different bundle, so bundling twice for it
   was waste
+
+## 0.1.4
+
+### Fixed
+
+- the per-still progress line went straight to stdout, so a caller driving many
+  passes could not quiet it. It goes through `log` now, which takes a second
+  argument saying whether the text is progress or a finished line

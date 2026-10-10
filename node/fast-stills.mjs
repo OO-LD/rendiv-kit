@@ -109,7 +109,8 @@ export function stalenessCheck({
  * @param {string}  [o.ownSourceDir] directory of files belonging to one still each
  * @param {Function}[o.ownSourceOf] still => path whose mtime affects only that still
  * @param {string}  [o.bundleDir]
- * @param {Function}[o.log]
+ * @param {Function}[o.log]  (text, { progress, done }) => void. Defaults to a
+ *                            writer that keeps each still on one line.
  */
 export async function fastStills({
   root,
@@ -125,7 +126,7 @@ export async function fastStills({
   ownSourceDir,
   ownSourceOf,
   bundleDir = DEFAULT_BUNDLE_DIR,
-  log = console.log,
+  log = (text, opts) => (opts?.progress ? process.stdout.write(text) : console.log(text)),
 }) {
   if (!stills?.length) throw new Error('fastStills: no stills requested');
 
@@ -186,7 +187,9 @@ export async function fastStills({
             `It holds: ${[...meta.keys()].join(', ')}`,
         );
       }
-      process.stdout.write(`${s.name} (${s.composition} @ ${s.frame}) ... `);
+      // Through `log` rather than straight to stdout, so a caller that drives
+      // many passes can quiet the per-still line and keep its own summary.
+      log(`${s.name} (${s.composition} @ ${s.frame}) ... `, { progress: true });
       const page = await pageFor(comp.width, comp.height);
       await page.evaluate(
         ({ id, input }) => {
@@ -204,7 +207,7 @@ export async function fastStills({
       await page.waitForFunction(() => window.__RENDIV_PENDING_HOLDS__() === 0, { timeout: 30000 });
       await page.screenshot({ path: fileFor(s), type: 'png', animations: 'disabled' });
       await page.context().close();
-      log('ok');
+      log('ok', { done: true });
     }
   } finally {
     await browser.close();
