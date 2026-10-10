@@ -64,3 +64,9 @@ copying.
   independent `rendiv still` reference confirmed which output was correct.
   Use `fastStills`, which waits on the pending-hold count and matches the CLI
   byte for byte.
+
+### Migrated onto it
+
+All eighteen projects across seven repositories. Twelve had committed stills to
+check against and reproduced them byte for byte; the other six render clean.
+Eight now use `fastStills`, which cut their still passes by three to four times.

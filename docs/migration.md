@@ -1,7 +1,8 @@
 # Migrating a project onto rendiv-kit
 
-Seventeen projects across six locations share the mechanics this kit now holds.
-This is the recipe for moving one of them onto it.
+Eighteen projects across seven locations shared the mechanics this kit now holds.
+All of them have been moved onto it; this is the recipe that was used, kept for
+the next project that needs it.
 
 The test is byte equality. Each project holds committed stills and rendered
 mp4s, so a migration is correct exactly when it reproduces them.
@@ -17,6 +18,7 @@ mp4s, so a migration is correct exactly when it reproduces them.
 | `ISC-Digital/documents/latex/MSE2026/talks` | `mse2026-d01`, `mse2026-d10`, `mse2026-d10-v2` |
 | `src/mc-explainers` | `wp01`, `wp02`, `wp03`, `wp05`, `wp11` (no git) |
 | `2025_BW2/.../assessment` | `talk1_rendiv`, `talk2_rendiv`, `talk2_v2_rendiv` |
+| `ISC-Digital/projects/zv-it/it-compliance/media` | `explainer` |
 
 Suggested order, easiest first so the recipe is proven before it meets the
 awkward cases:

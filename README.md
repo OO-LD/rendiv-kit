@@ -4,7 +4,8 @@ Shared mechanics for [rendiv](https://github.com/thecodacus/rendiv) video and
 deck projects: a fast still pipeline, segmented rendering, slide primitives,
 layout checks and deck exports.
 
-Collected from seventeen projects that had grown by copying. The kit mechanics
+Collected from eighteen projects that had grown by copying, all of which now
+consume it. The kit mechanics
 were byte-identical in all of them while the components had forked into three to
 seven variants each, and every improvement stayed where it was made: the fast
 still renderer in one talk, the PPTX export in another, the batched stills in a
