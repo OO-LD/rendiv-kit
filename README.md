@@ -122,7 +122,7 @@ template/   a working project to copy
 docs/       migration.md, upstream-rendiv.md
 ```
 
-## Two traps worth knowing
+## Traps worth knowing
 
 **Keep `resolve.dedupe`.** The kit's components call `useFrame()`, which reads a
 context `@rendiv/core` creates. A second copy of `@rendiv/core` creates a second
@@ -130,6 +130,11 @@ context, so the kit components read frame 0 while the scenes around them read
 the real one: entrance animations stay at opacity 0 and the still comes out as
 empty background, successfully and without a warning. This was hit while
 building the template.
+
+**A project that serves its own fonts and renders on Linux should stay on the
+per-frame path** until [docs/known-issues.md](docs/known-issues.md) is resolved.
+`fastStills` and `rendiv still` agree byte for byte on Windows everywhere tried,
+and disagree on webfont advance widths on a Linux runner.
 
 **The bundler entry filename is fixed.** `@rendiv/bundler` writes
 `__rendiv_entry__.jsx` into the project root, so two concurrent renders in one
