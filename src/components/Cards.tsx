@@ -2,7 +2,7 @@
 // a row of them. The metrics and everything inside a card are the project's.
 import React, { type CSSProperties, type ReactNode } from 'react';
 import { useCompositionConfig, useFrame } from '@rendiv/core';
-import { useTheme } from '../theme';
+import { useOptionalTheme } from '../theme';
 import { fadeIn, pop } from '../motion';
 
 /** The surface a card is drawn on. Defaults to the theme; override per card. */
@@ -44,14 +44,19 @@ export const Card: React.FC<CardProps> = ({
   column = false,
   children,
 }) => {
-  const { colors } = useTheme();
+  // Optional: a card is fully described by its props, so a project that passes
+  // its own skin and accent must not be forced to mount a provider.
+  const colors = useOptionalTheme()?.colors;
   const frame = useFrame();
   const { fps } = useCompositionConfig();
   const s = pop(frame, fps, delay, 16);
   const flow: CSSProperties = column ? { display: 'flex', flexDirection: 'column' } : {};
-  const panel = skin?.panel ?? colors.panel;
-  const hairline = skin?.hairline ?? colors.hairline;
-  const shadow = skin?.shadow ?? colors.shadow;
+  const panel = skin?.panel ?? colors?.panel;
+  const hairline = skin?.hairline ?? colors?.hairline;
+  const shadow = skin?.shadow ?? colors?.shadow;
+  if (!panel || !hairline) {
+    throw new Error('Card needs a skin: pass `skin`, or render it inside a ThemeProvider.');
+  }
   return (
     <div
       style={{
@@ -60,7 +65,7 @@ export const Card: React.FC<CardProps> = ({
         ...flow,
         background: panel,
         border: `2px solid ${hairline}`,
-        borderTop: `8px solid ${accent ?? colors.accent}`,
+        borderTop: `8px solid ${accent ?? colors?.accent}`,
         borderRadius: 18,
         padding,
         textAlign: 'left',
@@ -136,13 +141,13 @@ export const CardNote: React.FC<{
   paddingTop: number;
   children: ReactNode;
 }> = ({ hairline, size, lineHeight, colour, marginTop, paddingTop, children }) => {
-  const { colors } = useTheme();
+  const colors = useOptionalTheme()?.colors;
   return (
     <div
       style={{
         marginTop,
         paddingTop,
-        borderTop: `2px solid ${hairline ?? colors.hairline}`,
+        borderTop: `2px solid ${hairline ?? colors?.hairline}`,
         fontSize: size,
         lineHeight,
         fontWeight: 600,

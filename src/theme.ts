@@ -89,6 +89,16 @@ export function useTheme(): Theme {
   return theme;
 }
 
+/**
+ * The theme if there is one, null otherwise.
+ *
+ * For components that can draw entirely from their props and only consult the
+ * theme for defaults. Those must not force a provider on a project that passes
+ * its colours explicitly: demanding one would make adopting a single component
+ * an all-or-nothing change to the whole tree.
+ */
+export const useOptionalTheme = (): Theme | null => useContext(ThemeContext);
+
 /** `useTheme().colors`, which is most of what a component wants. */
 export const useColors = (): Palette => useTheme().colors;
 export const useType = (): TypeScale => useTheme().type;

@@ -1,6 +1,7 @@
 export {
   ThemeProvider,
   useTheme,
+  useOptionalTheme,
   useColors,
   useType,
   useLayout,
