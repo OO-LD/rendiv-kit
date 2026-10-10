@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rendiv-kit"
+version = "0.1.0"
+description = "Deck exports, projector simulation and cut checks for rendiv video projects"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "python-pptx>=1.0",
+    "Pillow>=10.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/simontaurus/rendiv-kit"
+
+[project.scripts]
+rendiv-export = "rendiv_kit.exports:main"
+rendiv-vga = "rendiv_kit.vga:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["rendiv_kit"]

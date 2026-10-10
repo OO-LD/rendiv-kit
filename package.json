@@ -1,0 +1,53 @@
+{
+  "name": "rendiv-kit",
+  "version": "0.1.0",
+  "description": "Shared mechanics for rendiv video and deck projects: a fast still pipeline, segmented rendering, slide primitives, layout checks and deck exports.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simontaurus/rendiv-kit.git"
+  },
+  "type": "module",
+  "files": [
+    "src",
+    "node",
+    "python",
+    "template",
+    "docs"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./motion": "./src/motion.ts",
+    "./fonts": "./src/fonts.ts",
+    "./theme": "./src/theme.ts",
+    "./components/*": "./src/components/*.tsx",
+    "./node": "./node/index.mjs",
+    "./node/*": "./node/*.mjs",
+    "./checks/*": "./node/checks/*.mjs",
+    "./template/*": "./template/*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test node/*.test.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  },
+  "peerDependencies": {
+    "@rendiv/bundler": ">=0.2.6",
+    "@rendiv/cli": ">=0.2.6",
+    "@rendiv/core": ">=0.2.6",
+    "ffmpeg-static": "*",
+    "react": ">=19",
+    "react-dom": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "@rendiv/bundler": { "optional": true },
+    "ffmpeg-static": { "optional": true }
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

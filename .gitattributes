@@ -1,0 +1,14 @@
+# Normalised to LF in the repository. Every copied kit on this machine hashed
+# differently from every other one while being byte-identical in content,
+# because Windows checkouts stored CRLF. A pin or a sync that compares content
+# hashes cannot tell that apart from a real edit.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.mp4 binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.pptx binary
+*.pdf binary

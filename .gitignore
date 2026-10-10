@@ -1,0 +1,10 @@
+node_modules/
+out/
+__pycache__/
+*.egg-info/
+.venv/
+
+# rendiv writes these beside the entry point while bundling and removes them
+# again, but a killed render leaves them behind.
+__rendiv_entry__.jsx
+__rendiv_entry__.html
