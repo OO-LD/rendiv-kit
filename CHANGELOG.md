@@ -70,3 +70,14 @@ copying.
 All eighteen projects across seven repositories. Twelve had committed stills to
 check against and reproduced them byte for byte; the other six render clean.
 Eight now use `fastStills`, which cut their still passes by three to four times.
+
+## 0.1.3
+
+### Added
+
+- `fastStills` and `buildBundle` take a `cwd` separate from `root`, for a series
+  that keeps one install at its root and an entry point per episode. The bundler
+  lock follows `cwd`, which is where `__rendiv_entry__.jsx` lands
+- a still may name its own `outDir`, so one pass writes every palette of a cut.
+  The palette is an input prop, not a different bundle, so bundling twice for it
+  was waste

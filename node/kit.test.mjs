@@ -233,3 +233,23 @@ test('theme-contract.json and the types in theme.ts agree on required tokens', (
     }
   }
 });
+
+// A tutorial series keeps one toolchain at the series root and an entry point
+// per episode, so the directory that locates node_modules is not the directory
+// the build runs in.
+test('stalenessCheck resolves its source dirs against the directory it is given', () => {
+  const series = tmpProject();
+  const ep = path.join(series, 'ep1');
+  fs.mkdirSync(path.join(ep, 'src'), { recursive: true });
+  fs.mkdirSync(path.join(ep, 'out'), { recursive: true });
+  const own = write(series, 'ep1/src/scene.tsx');
+  const png = write(series, 'ep1/out/a.png');
+  touch(own, -20_000);
+  touch(png, -10_000);
+
+  const isStale = stalenessCheck({ root: ep });
+  assert.ok(!isStale({ name: 'a' }, png), 'episode sources are older, still is current');
+
+  touch(own, 10_000);
+  assert.ok(stalenessCheck({ root: ep })({ name: 'a' }, png), 'its own source moved it');
+});

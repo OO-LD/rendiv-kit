@@ -32,29 +32,37 @@ const bundlerFrom = async (root) => {
 };
 
 // Builds into `bundleDir` under a lock, because @rendiv/bundler writes
-// __rendiv_entry__.jsx into the project root under a fixed name and two
-// concurrent builds in one directory clobber each other.
+// __rendiv_entry__.jsx into the working directory under a fixed name and two
+// concurrent builds there clobber each other.
+//
+// `root` locates node_modules, `cwd` is where the build runs. They differ when
+// several compositions share one install: a tutorial series keeps one toolchain
+// at the series root and an entry point, a public directory and an output
+// directory per episode. The lock follows `cwd`, because that is where the
+// entry file lands.
 export async function buildBundle({
   root,
+  cwd,
   entry = 'src/index.tsx',
   bundleDir = DEFAULT_BUNDLE_DIR,
   log = console.log,
 }) {
-  const outDir = path.resolve(root, bundleDir);
+  const base = cwd ? path.resolve(root, cwd) : path.resolve(root);
+  const outDir = path.resolve(base, bundleDir);
   const { bundle } = await bundlerFrom(root);
   const started = Date.now();
 
   // Vite resolves the entry and the public directory against the working
   // directory, and npm may start a script from anywhere.
   const previous = process.cwd();
-  process.chdir(root);
+  process.chdir(base);
   try {
-    await withLock(lockDirFor(root), () => bundle({ entryPoint: entry, outDir }));
+    await withLock(lockDirFor(base), () => bundle({ entryPoint: entry, outDir }));
   } finally {
     process.chdir(previous);
   }
 
-  log(`bundled into ${bundleDir} (${((Date.now() - started) / 1000).toFixed(1)}s)`);
+  log(`bundled into ${path.relative(base, outDir) || bundleDir} (${((Date.now() - started) / 1000).toFixed(1)}s)`);
   return outDir;
 }
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "rendiv-kit"
-version = "0.1.2"
+version = "0.1.3"
 description = "Deck exports, projector simulation and cut checks for rendiv video projects"
 readme = "README.md"
 requires-python = ">=3.10"

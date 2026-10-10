@@ -94,10 +94,13 @@ export function stalenessCheck({
 
 /**
  * @param {object} o
- * @param {string}   o.root        project root, the directory holding node_modules
- * @param {string}   o.entry       entry module, relative to root
- * @param {string}   o.outDir      where the PNGs go, relative to root
- * @param {Array}    o.stills      [{ name, composition, frame }]
+ * @param {string}   o.root        locates node_modules
+ * @param {string}  [o.cwd]        where the build runs, when it is not `root`.
+ *                                 They differ where several compositions share
+ *                                 one install.
+ * @param {string}   o.entry       entry module, relative to cwd ?? root
+ * @param {string}   o.outDir      where the PNGs go, relative to cwd ?? root
+ * @param {Array}    o.stills      [{ name, composition, frame, props?, outDir? }]
  * @param {object}  [o.props]      input props handed to every composition
  * @param {number}  [o.width]      probe viewport, defaults to the first composition
  * @param {number}  [o.height]
@@ -110,6 +113,7 @@ export function stalenessCheck({
  */
 export async function fastStills({
   root,
+  cwd,
   entry = 'src/index.tsx',
   outDir = 'out/stills',
   stills,
@@ -125,11 +129,16 @@ export async function fastStills({
 }) {
   if (!stills?.length) throw new Error('fastStills: no stills requested');
 
-  const outAbs = path.resolve(root, outDir);
-  fs.mkdirSync(outAbs, { recursive: true });
+  const base = cwd ? path.resolve(root, cwd) : path.resolve(root);
 
-  const isStale = stalenessCheck({ root, sourceDirs, ownSourceDir, ownSourceOf, force });
-  const fileFor = (s) => path.join(outAbs, `${s.name}.png`);
+  // A still may name its own directory, so one pass can write both palettes of
+  // a cut without bundling twice: the palette is an input prop, not a different
+  // bundle.
+  const dirFor = (s) => path.resolve(base, s.outDir ?? outDir);
+  for (const dir of new Set(stills.map(dirFor))) fs.mkdirSync(dir, { recursive: true });
+
+  const isStale = stalenessCheck({ root: base, sourceDirs, ownSourceDir, ownSourceOf, force });
+  const fileFor = (s) => path.join(dirFor(s), `${s.name}.png`);
   const todo = stills.filter((s) => isStale(s, fileFor(s)));
 
   const started = Date.now();
@@ -143,7 +152,7 @@ export async function fastStills({
   // installs a browser.
   const { chromium } = await import('playwright');
 
-  const dir = await buildBundle({ root, entry, bundleDir, log });
+  const dir = await buildBundle({ root, cwd, entry, bundleDir, log });
   const server = await serve(dir);
   const browser = await chromium.launch({ headless: true, args: BROWSER_ARGS });
 
