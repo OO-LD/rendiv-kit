@@ -89,3 +89,14 @@ Eight now use `fastStills`, which cut their still passes by three to four times.
 - the per-still progress line went straight to stdout, so a caller driving many
   passes could not quiet it. It goes through `log` now, which takes a second
   argument saying whether the text is progress or a finished line
+
+## 0.1.5
+
+### Fixed
+
+- `fastStills` waits for `document.fonts.ready` as well as the pending-hold
+  count. The holds do not fully cover the font set, so a screenshot could be
+  taken with a face still in flight: the glyphs then come from the fallback and
+  only the text's width changes, which looks plausible and is wrong by a few
+  pixels. CI on Linux caught this on the two mono-heavy frames of a project
+  whose other twelve matched.

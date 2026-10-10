@@ -205,6 +205,15 @@ export async function fastStills({
       // Fonts, images and video posters register a hold while they load. A
       // screenshot taken before they resolve is a frame with the fallback face.
       await page.waitForFunction(() => window.__RENDIV_PENDING_HOLDS__() === 0, { timeout: 30000 });
+
+      // And then the font set itself, which the holds do not fully cover. A
+      // project that forgets a weight in its loadFonts list, or that swaps the
+      // composition after the holds cleared, can reach this point with a face
+      // still in flight. The glyphs then come from the fallback and only the
+      // text's own width changes, so the frame looks plausible and is wrong by
+      // a few pixels. Cheap to wait for, and it is already resolved in the
+      // common case.
+      await page.evaluate(() => document.fonts.ready.then(() => undefined));
       await page.screenshot({ path: fileFor(s), type: 'png', animations: 'disabled' });
       await page.context().close();
       log('ok', { done: true });

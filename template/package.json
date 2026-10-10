@@ -25,7 +25,7 @@
     "ffmpeg-static": "^5.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "rendiv-kit": "github:simontaurus/rendiv-kit#v0.1.4"
+    "rendiv-kit": "github:simontaurus/rendiv-kit#v0.1.5"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
