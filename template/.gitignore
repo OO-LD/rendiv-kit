@@ -1,0 +1,18 @@
+node_modules/
+
+# rendiv writes these beside the entry point while bundling and removes them
+# when it finishes. A killed render leaves them behind.
+__rendiv_entry__.jsx
+__rendiv_entry__.html
+
+# The bundle the fast still path builds once and renders every still against.
+# Pinned here rather than left in the system temp directory, where @rendiv/cli
+# leaves one per still and removes none.
+out/.bundle/
+out/.bundler-lock/
+
+# Clips sliced out of the segment renders for the video deck. Derived.
+out/beat-clips/
+
+# out/stills and the exported deck are deliverables. Commit them on purpose if
+# the project wants a reviewable diff of what changed on screen.

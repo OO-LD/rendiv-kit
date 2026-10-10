@@ -30,8 +30,18 @@ export const DEFAULTS = {
     minSize: 28,
     /** px. The first thing an analogue chain removes. */
     minStroke: 2,
-    /** seconds per reveal stage. */
+    /**
+     * Seconds per reveal stage of a deck. A stage is held while a room reads it
+     * and copies it down, so it has a floor.
+     */
     minDwell: 12,
+    /**
+     * Seconds per beat of a video timeline. Off by default: a beat is a shot in
+     * a cut that keeps moving and the viewer can go back, so its pacing is
+     * editorial rather than an accessibility property. Set it where the video
+     * is shown once, in a room, with no control.
+     */
+    minBeatSeconds: null,
     /** WCAG text. */
     minRatio: 4.5,
     /** WCAG graphical objects: nothing is spelled out in them. */

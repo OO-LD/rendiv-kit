@@ -20,6 +20,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { at, loadConfig, parseOnly, report } from '../config.mjs';
+import { isMain } from '../is-main.mjs';
 import { ffmpegPath } from '../rendiv.mjs';
 
 /** Luma spread across a crop. A flat band reads near 0. */
@@ -98,7 +99,7 @@ export function runStills(config, only = []) {
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}`) {
+if (isMain(import.meta.url)) {
   const config = loadConfig(process.cwd());
   const { problems, summary } = runStills(config, parseOnly(process.argv.slice(2)));
   report('stills check', problems, summary);

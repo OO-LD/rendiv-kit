@@ -13,6 +13,7 @@
 //   node node_modules/rendiv-kit/node/checks/barred.mjs
 import fs from 'node:fs';
 import { at, loadConfig, readJson, relTo, report, walk } from '../config.mjs';
+import { isMain } from '../is-main.mjs';
 
 // Source comments are where the reasoning about a barred entry belongs, and an
 // entry's own `why` is often repeated there. Scanning them would make the check
@@ -59,7 +60,7 @@ export function runBarred(config) {
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}`) {
+if (isMain(import.meta.url)) {
   const config = loadConfig(process.cwd());
   const { problems, summary } = runBarred(config);
   report('barred check', problems, summary);

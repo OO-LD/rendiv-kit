@@ -14,6 +14,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { at, loadConfig, readJson, relTo, report, walk } from '../config.mjs';
+import { isMain } from '../is-main.mjs';
 import { numberFrom, readPalettes, typeTiersFrom } from '../theme-source.mjs';
 import { checkPalette } from './contrast.mjs';
 
@@ -33,7 +34,7 @@ export function runA11y(config) {
         'Nothing was measured for it, so a failure there would not show up here.',
     );
   }
-  let measured = 0;
+  let pairs = 0;
   for (const [name, palette] of Object.entries(palettes)) {
     const r = checkPalette({
       name,
@@ -45,7 +46,7 @@ export function runA11y(config) {
       minRatioGraphic: a.minRatioGraphic,
     });
     problems.push(...r.problems.map((p) => `contrast: ${p}`));
-    measured += r.measured;
+    pairs += r.measured;
   }
 
   // 2. Type size
@@ -132,16 +133,30 @@ export function runA11y(config) {
   }
 
   // 4. Dwell
-
-  const stages = dwellUnits(config);
-  for (const u of stages) {
-    if (u.seconds < a.minDwell) {
+  //
+  // A deck stage and a video beat are not the same unit. A stage is held while
+  // a room reads it and copies it down, so it has a floor. A beat is a shot in
+  // a cut that keeps moving, and the viewer can go back; its pacing is
+  // editorial. The floor therefore applies to stages by default and to beats
+  // only where a project asks for it.
+  const units = dwellUnits(config);
+  const floorFor = (kind) => (kind === 'stage' ? a.minDwell : a.minBeatSeconds);
+  let measured = 0;
+  for (const u of units) {
+    const floor = floorFor(u.kind);
+    if (!floor) continue;
+    measured += 1;
+    if (u.seconds < floor) {
       problems.push(
-        `dwell: ${u.id} gives each of its ${u.count} stages ${u.seconds.toFixed(1)}s, ` +
-          `under ${a.minDwell}s. Cut a stage or buy it time.`,
+        `dwell: ${u.id} gives ${u.seconds.toFixed(1)}s` +
+          (u.count > 1 ? ` to each of its ${u.count} stages` : '') +
+          `, under ${floor}s. Cut one, or buy it time.`,
       );
     }
   }
+  const dwellNote = measured
+    ? `${measured} units over their dwell floor`
+    : `no dwell floor applies to ${units.length} ${units[0]?.kind ?? 'unit'}s`;
 
   // 5. Safe area
 
@@ -186,9 +201,9 @@ export function runA11y(config) {
   return {
     problems,
     summary:
-      `${measured} contrast pairs across ${Object.keys(palettes).length} palettes, ` +
+      `${pairs} contrast pairs across ${Object.keys(palettes).length} palettes, ` +
       `type >= ${a.minSize}px and strokes >= ${a.minStroke}px outside ${allow.length} ` +
-      `argued exceptions, ${stages.length} units >= ${a.minDwell}s, ` +
+      `argued exceptions, ${dwellNote}, ` +
       `nothing inside the ${padY}/${padX} margin`,
   };
 }
@@ -203,6 +218,7 @@ function dwellUnits(config) {
       .filter((s) => s.minutes && s.stages?.length)
       .map((s) => ({
         id: s.id,
+        kind: 'stage',
         count: s.stages.length,
         seconds: (s.minutes * 60) / s.stages.length,
       }));
@@ -214,6 +230,7 @@ function dwellUnits(config) {
     return tl.segments.flatMap((seg) =>
       (seg.beats ?? []).map((b) => ({
         id: `${seg.id}.${b.name}`,
+        kind: 'beat',
         count: 1,
         seconds: b.len / tl.fps,
       })),
@@ -222,7 +239,7 @@ function dwellUnits(config) {
   return [];
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}`) {
+if (isMain(import.meta.url)) {
   const config = loadConfig(process.cwd());
   const { problems, summary } = runA11y(config);
   report('a11y check', problems, summary);

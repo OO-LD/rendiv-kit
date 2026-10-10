@@ -1,0 +1,20 @@
+{
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "segments": [
+    {
+      "id": "S1",
+      "beats": [
+        { "name": "open", "len": 90 },
+        { "name": "claim", "len": 120 }
+      ]
+    },
+    {
+      "id": "S2",
+      "beats": [
+        { "name": "close", "len": 90 }
+      ]
+    }
+  ]
+}

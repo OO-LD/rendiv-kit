@@ -7,6 +7,7 @@
 //   node node_modules/rendiv-kit/node/checks/index.mjs
 //   node node_modules/rendiv-kit/node/checks/index.mjs theme a11y
 import { loadConfig } from '../config.mjs';
+import { isMain } from '../is-main.mjs';
 import { runA11y } from './a11y.mjs';
 import { runBarred } from './barred.mjs';
 import { runBudget } from './budget.mjs';
@@ -41,7 +42,7 @@ export function runChecks(config, names = Object.keys(CHECKS)) {
   return results;
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}`) {
+if (isMain(import.meta.url)) {
   const wanted = process.argv.slice(2).filter((a) => !a.startsWith('--'));
   const config = loadConfig(process.cwd());
   const results = runChecks(config, wanted.length ? wanted : undefined);

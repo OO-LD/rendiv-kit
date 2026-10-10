@@ -14,6 +14,7 @@
 //   node node_modules/rendiv-kit/node/checks/budget.mjs
 import fs from 'node:fs';
 import { at, loadConfig, readJson, report } from '../config.mjs';
+import { isMain } from '../is-main.mjs';
 
 const clock = (minutes) => {
   const total = Math.round(minutes * 60);
@@ -23,9 +24,15 @@ const clock = (minutes) => {
 export function runBudget(config, log = console.log) {
   const problems = [];
   const b = config.budget;
+  // A project with no deck has nothing to budget: a timeline-driven video has
+  // its duration in its beats. Not configuring one is a shape, not a mistake.
+  // Configuring one that is not there is a mistake.
   const deckFile = at(config, config.deck);
-  if (!deckFile || !fs.existsSync(deckFile)) {
-    return { problems: [`no deck at ${config.deck}; set "deck" in rendiv.config.json`], summary: '' };
+  if (!deckFile) {
+    return { problems: [], summary: 'no deck configured, nothing to budget' };
+  }
+  if (!fs.existsSync(deckFile)) {
+    return { problems: [`the config names a deck at ${config.deck}, which does not exist`], summary: '' };
   }
   const deck = readJson(deckFile);
 
@@ -106,7 +113,7 @@ export function runBudget(config, log = console.log) {
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}`) {
+if (isMain(import.meta.url)) {
   const config = loadConfig(process.cwd());
   const { problems, summary } = runBudget(config);
   report('budget check', problems, summary);

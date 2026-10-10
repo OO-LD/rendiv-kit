@@ -12,6 +12,7 @@
 //   node node_modules/rendiv-kit/node/checks/novelty.mjs
 import fs from 'node:fs';
 import { at, loadConfig, readJson, relTo, report, walk } from '../config.mjs';
+import { isMain } from '../is-main.mjs';
 
 const words = (s) =>
   s
@@ -89,7 +90,7 @@ export function runNovelty(config) {
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}`) {
+if (isMain(import.meta.url)) {
   const config = loadConfig(process.cwd());
   const { problems, summary } = runNovelty(config);
   report('novelty check', problems, summary);

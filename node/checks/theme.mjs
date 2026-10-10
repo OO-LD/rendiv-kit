@@ -13,6 +13,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { at, loadConfig, report } from '../config.mjs';
+import { isMain } from '../is-main.mjs';
 import { numberFrom, readPalettes, typeTiersFrom } from '../theme-source.mjs';
 
 const kitRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -85,7 +86,7 @@ export function runTheme(config) {
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}`) {
+if (isMain(import.meta.url)) {
   const config = loadConfig(process.cwd());
   const { problems, summary } = runTheme(config);
   report('theme check', problems, summary);

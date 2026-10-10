@@ -1,0 +1,15 @@
+/* The template ships no font files, so it renders on a fresh checkout.
+   Swap in the project's faces here and list every weight in the `loadFonts`
+   call in src/index.tsx: a weight declared here and not listed there can still
+   capture before it is ready, which is a frame drawn in the fallback face.
+
+   Serve them from public/fonts so a render needs no network.
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  src: url('/fonts/Inter-Variable.woff2') format('woff2');
+}
+*/

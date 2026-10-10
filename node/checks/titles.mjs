@@ -19,6 +19,7 @@
 //   node node_modules/rendiv-kit/node/checks/titles.mjs
 import fs from 'node:fs';
 import { at, loadConfig, readJson, report } from '../config.mjs';
+import { isMain } from '../is-main.mjs';
 import { typeTiersFrom } from '../theme-source.mjs';
 
 const words = (s) =>
@@ -40,9 +41,14 @@ export function restates(kicker, title) {
 
 export function runTitles(config) {
   const problems = [];
+  // Section names are a deck's furniture. A timeline-driven video has none, so
+  // there is nothing for a kicker to repeat.
   const deckFile = at(config, config.deck);
-  if (!deckFile || !fs.existsSync(deckFile)) {
-    return { problems: [`no deck at ${config.deck}; set "deck" in rendiv.config.json`], summary: '' };
+  if (!deckFile) {
+    return { problems: [], summary: 'no deck configured, no section names to repeat' };
+  }
+  if (!fs.existsSync(deckFile)) {
+    return { problems: [`the config names a deck at ${config.deck}, which does not exist`], summary: '' };
   }
   const deck = readJson(deckFile);
 
@@ -114,7 +120,7 @@ export function runTitles(config) {
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replace(/\\/g, '/')}`) {
+if (isMain(import.meta.url)) {
   const config = loadConfig(process.cwd());
   const { problems, summary } = runTitles(config);
   report('title check', problems, summary);

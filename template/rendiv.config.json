@@ -1,0 +1,26 @@
+{
+  "$comment": "Thresholds are room-dependent, which is why they live here and not in the kit. These are set for a video watched on a screen. A talk projected in a lecture hall wants minSize 28, minStroke 2 and minBeatSeconds 12; see node/config.mjs for every key and its default.",
+  "entry": "src/index.tsx",
+  "srcDir": "src",
+  "timeline": "src/timeline.json",
+  "palettes": ["LIGHT", "DARK"],
+  "a11y": {
+    "minSize": 24,
+    "minStroke": 2,
+    "minBeatSeconds": null,
+    "bodyTokens": ["ink", "muted", "accent", "codeString", "codePlain", "codePunct"],
+    "graphicTokens": ["hairline"],
+    "surfaces": ["bg", "panel"],
+    "allow": "scripts/a11y-allow.json"
+  },
+  "barred": {
+    "list": "scripts/barred.json"
+  },
+  "novelty": {
+    "against": null
+  },
+  "stills": {
+    "titleBandBottom": null,
+    "contentTop": null
+  }
+}
