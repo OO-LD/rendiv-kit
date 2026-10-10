@@ -20,9 +20,12 @@
     "./motion": "./src/motion.ts",
     "./fonts": "./src/fonts.ts",
     "./theme": "./src/theme.ts",
+    "./components/*.tsx": "./src/components/*.tsx",
     "./components/*": "./src/components/*.tsx",
     "./node": "./node/index.mjs",
+    "./node/*.mjs": "./node/*.mjs",
     "./node/*": "./node/*.mjs",
+    "./checks/*.mjs": "./node/checks/*.mjs",
     "./checks/*": "./node/checks/*.mjs",
     "./template/*": "./template/*"
   },
