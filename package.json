@@ -1,11 +1,11 @@
 {
   "name": "rendiv-kit",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Shared mechanics for rendiv video and deck projects: a fast still pipeline, segmented rendering, slide primitives, layout checks and deck exports.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/simontaurus/rendiv-kit.git"
+    "url": "git+https://github.com/OO-LD/rendiv-kit.git"
   },
   "type": "module",
   "files": [

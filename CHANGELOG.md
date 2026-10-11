@@ -100,3 +100,8 @@ Eight now use `fastStills`, which cut their still passes by three to four times.
   only the text's width changes, which looks plausible and is wrong by a few
   pixels. CI on Linux caught this on the two mono-heavy frames of a project
   whose other twelve matched.
+
+## 0.2.0
+
+Moved to the OO-LD organisation: `github:OO-LD/rendiv-kit`. The minor bump is
+the import path changing, not the code.

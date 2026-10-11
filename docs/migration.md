@@ -51,8 +51,8 @@ md5sum out/stills/*.png | sort > /tmp/<project>-before.md5
 **1. Install the kit.**
 
 ```bash
-npm i github:simontaurus/rendiv-kit#v0.1.5
-pip install "rendiv-kit @ git+https://github.com/simontaurus/rendiv-kit#subdirectory=python"
+npm i github:OO-LD/rendiv-kit#v0.2.0
+pip install "rendiv-kit @ git+https://github.com/OO-LD/rendiv-kit#subdirectory=python"
 ```
 
 **2. Delete the vendored kit.** `rm -rf kit/` or `../kit/`, plus `kit-pin.json`,

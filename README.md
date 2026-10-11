@@ -17,8 +17,8 @@ is read from the consuming project's `rendiv.config.json`.
 ## Install
 
 ```bash
-npm i github:simontaurus/rendiv-kit#v0.1.5
-pip install "rendiv-kit @ git+https://github.com/simontaurus/rendiv-kit#subdirectory=python"
+npm i github:OO-LD/rendiv-kit#v0.2.0
+pip install "rendiv-kit @ git+https://github.com/OO-LD/rendiv-kit#subdirectory=python"
 ```
 
 Start from `template/`, which is a working project: a timeline, two segments, a
