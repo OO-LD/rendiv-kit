@@ -28,18 +28,24 @@ What is known:
   extensions the same way the renderer's own server does.
 - **Not fixed by waiting for fonts.** 0.1.5 added `document.fonts.ready` on top
   of the pending-hold count. The output did not change.
+- **Not the font request.** Inlining the faces as `data:` URIs, so there is no
+  font request at all, left the rendered frames byte-identical to before. That
+  rules out the fetch losing a race against the screenshot, which had been the
+  leading theory: the sibling project that never showed the problem inlines its
+  faces, and that turned out to be a coincidence rather than the cause.
 
 What is left, and where to look next:
 
 - The bundle. `rendiv still` builds with no `outDir`, into a temp directory;
-  `fastStills` passes `outDir: out/.bundle` inside the project. If Vite treats
-  the public directory or the asset base differently between the two, the font
-  request could resolve in one and not the other. The copied `.woff2` files are
-  present in `out/.bundle/fonts/` locally, so if this is the cause it is
-  Linux-specific.
-- Whether the font request 404s on the runner. Logging
-  `document.fonts.check('400 30px "<family>"')` next to the screenshot would
-  settle it in one run.
+  `fastStills` passes `outDir: out/.bundle` inside the project. Something about
+  the build, rather than the serving, is the remaining difference between them.
+- Whether the face is applied at all on the runner. Logging
+  `document.fonts.check('400 30px "<family>"')` and the computed
+  `font-family` of a mono node next to the screenshot would settle in one run
+  whether this is a font problem or a layout one.
+- Whether it is a font problem at all. The glyph shapes look right in the
+  comparison; only the advance widths differ. That is also what a different
+  `zoom`, `deviceScaleFactor` or text-size-adjust would produce.
 
 Until it is understood, a project that serves its own fonts **and** renders on
 Linux should stay on the per-frame path. Four projects currently use
