@@ -12,20 +12,17 @@ type Props = {
   padY?: number;
   /** Drawn behind the children, under the padding. A rail, a grid, a wash. */
   backdrop?: React.ReactNode;
-  /**
-   * Furniture drawn below everything a block can occupy, inside the bottom
-   * padding. Off on title frames, which carry their own eyebrow.
-   */
-  footer?: React.ReactNode;
   style?: React.CSSProperties;
 };
 
 // Every scene is centred on both axes by default. Blocks inside only need to set
 // their own max width; they do not position themselves.
 //
-// Furniture is drawn by the Stage rather than by each scene, so it cannot drift
-// by a pixel between frames. A scene that needs it on some beats and not others
-// passes it conditionally.
+// `opacity` is the scene's own, and the usual caller passes a cross-dissolve.
+// Everything here is therefore inside it, which is right for the scene's
+// content and wrong for anything that outlives the scene. A footer drawn here
+// dissolves with the scene and dips to about a third at every boundary; see
+// <Furniture> in Frame.tsx, which draws it once above the whole stack.
 export const Stage: React.FC<Props> = ({
   children,
   opacity = 1,
@@ -35,7 +32,6 @@ export const Stage: React.FC<Props> = ({
   padX,
   padY,
   backdrop,
-  footer,
   style,
 }) => {
   const { colors, fonts, layout } = useTheme();
@@ -57,7 +53,6 @@ export const Stage: React.FC<Props> = ({
     >
       {backdrop}
       {children}
-      {footer}
     </Fill>
   );
 };

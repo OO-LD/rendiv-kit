@@ -50,6 +50,7 @@ export {
 export { loadFonts } from './fonts';
 
 export { Stage } from './components/Stage';
+export { Frame, SceneStack, Furniture } from './components/Frame';
 export { Slide, Reveal, SlideChrome } from './components/Slide';
 export { Footer } from './components/Footer';
 export { TitleCard, type TitleMetrics } from './components/TitleCard';

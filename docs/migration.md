@@ -51,7 +51,7 @@ md5sum out/stills/*.png | sort > /tmp/<project>-before.md5
 **1. Install the kit.**
 
 ```bash
-npm i github:OO-LD/rendiv-kit#v0.2.0
+npm i github:OO-LD/rendiv-kit#v0.3.0
 pip install "rendiv-kit @ git+https://github.com/OO-LD/rendiv-kit#subdirectory=python"
 ```
 

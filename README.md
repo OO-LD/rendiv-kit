@@ -17,7 +17,7 @@ is read from the consuming project's `rendiv.config.json`.
 ## Install
 
 ```bash
-npm i github:OO-LD/rendiv-kit#v0.2.0
+npm i github:OO-LD/rendiv-kit#v0.3.0
 pip install "rendiv-kit @ git+https://github.com/OO-LD/rendiv-kit#subdirectory=python"
 ```
 

@@ -105,3 +105,20 @@ Eight now use `fastStills`, which cut their still passes by three to four times.
 
 Moved to the OO-LD organisation: `github:OO-LD/rendiv-kit`. The minor bump is
 the import path changing, not the code.
+
+## 0.3.0
+
+### Added
+
+- `Frame`, `SceneStack` and `Furniture`, for anything that outlives a scene.
+  Four separate things go wrong without them, and the component comments name
+  each one: inheriting a scene's dissolve, compositing twice while two scenes
+  are mounted, painting under `Sequence`'s z-index, and falling back to the
+  browser default serif outside a `Stage`.
+
+### Removed
+
+- `Stage`'s `footer` prop. It sat inside the scene's `opacity`, so a footer
+  passed there dissolved with the scene: measured alpha held at 1.000 and dipped
+  to 0.355 over 14 frames at every boundary. Furniture belongs in `Furniture`,
+  where the dip is not representable.
