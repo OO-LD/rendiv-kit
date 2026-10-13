@@ -51,3 +51,31 @@ Until it is understood, a project that serves its own fonts **and** renders on
 Linux should stay on the per-frame path. Four projects currently use
 `fastStills` with webfonts; all of them render on Windows only, and all were
 verified byte-identical there.
+
+## A still can change between two identical runs
+
+**Status:** open, intermittent. Seen on Windows.
+
+Rendering one project's 14 stills twice in a row, same commit, same kit, same
+machine, produced a different image for one of them. Re-rendering that beat on
+its own reproduced cleanly. Over several runs about six of the fourteen drifted
+from an older reference.
+
+It is not the kit version: it reproduces on 0.1.4, before the
+`document.fonts.ready` wait, and on 0.3.0. It is not the scene content either,
+as that project has no raster images, no CSS transition or animation, and no
+`Date.now`, `Math.random` or `setTimeout` anywhere in `src/`. Inline SVG and
+frame-driven interpolation are all that draw.
+
+Two consequences:
+
+- **A single clean comparison does not prove byte-equality for a project.** Any
+  claim of "identical stills" should come from at least two consecutive runs,
+  and ideally from re-rendering the frames that differ.
+- It is the same shape as the race that `stills()` was removed for in 0.1.2,
+  which suggests something still settles late. The difference is that `stills()`
+  was reliably wrong in one direction, and this is occasional.
+
+Worth capturing next time it appears: the pending-hold count and
+`document.fonts.check` for each declared face immediately before the screenshot,
+and whether the frames that drift are the ones with the most text.
